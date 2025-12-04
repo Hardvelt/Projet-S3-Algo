@@ -11,19 +11,91 @@ public class Formation{
 	}
 
 	public int CreerGroupes (int nbrGroupes){
-		if(!ValideCreationGroupes())
+		if(!ValideCreationGroupes(nbrGroupes))
 			return 0;
+		
+		ArrayList<ArrayList<Etudiant>> groupesCovoit = this.groupesCovoiturage();
+		ArrayList<Groupe> GroupeAnglo = new ArrayList<Groupe>();
+		for(ArrayList<Etudiant> etudiants){
+			for(Etudiant e : etudiants){
+				if(e.estSecAnglo)
+					
 
 	}
-	
+
+	private ArrayList<ArrayList<Etudiant>> groupesCovoiturage(){
+		ArrayList<ArrayList<Etudiant>> groupesCovoit = new ArrayList<ArrayList<Etudiant>>();
+		for(Etudiant e : this.etudiants){
+			if(e.groupeCovoit.isNull())
+				continue;
+			groupesCovoit.get(e.groupeCovoit).add(e);
+		}
+		return groupesCovoit;
+	}
+
+	public static void merge(ArrayList<Etudiant> arr, int left, int mid, int right) {
+
+		int n1 = mid - left + 1;
+		int n2 = right - mid;
+
+		// Listes temporaires
+		ArrayList<Etudiant> L = new ArrayList<>(n1);
+		ArrayList<Etudiant> R = new ArrayList<>(n2);
+
+		// Copier les données dans les listes temporaires
+		for (int i = 0; i < n1; i++)
+			L.add(arr.get(left + i));
+		for (int j = 0; j < n2; j++)
+			R.add(arr.get(mid + 1 + j));
+
+		int i = 0, j = 0;
+		int k = left;
+
+		// Fusion
+		while (i < n1 && j < n2) {
+			if (L.get(i).moyenne() <= R.get(j).moyenne()) {
+				arr.set(k, L.get(i));
+				i++;
+			} else {
+				arr.set(k, R.get(j));
+				j++;
+			}
+			k++;
+		}
+
+		while (i < n1) {
+			arr.set(k, L.get(i));
+			i++;
+			k++;
+		}
+
+		while (j < n2) {
+			arr.set(k, R.get(j));
+			j++;
+			k++;
+		}
+	}
+
+	public static void triEtudiantMoyenne(ArrayList<Etudiant> arr, int left, int right) {
+		if (left >= right)
+			return;
+
+		int mid = left + (right - left) / 2;
+
+		triEtudiantMoyenne(arr, left, mid);
+		triEtudiantMoyenne(arr, mid + 1, right);
+
+		merge(arr, left, mid, right);
+	}
+
 	private boolean ValideCreationGroupes (int nbrGroupes){
-		int check = checkNbrGroupes();
+		int check = checkNbrGroupes(nbrGroupes);
 		if(check == 1){
 			System.out.println("Veuillez choisir un nombre de groupes plus élevé.");
-			return 1;
+			return false;
 		}
 		if(check == 2){
-			Scanner sc = newScanner(System.in);
+			Scanner sc = new Scanner(System.in);
 			System.out.println("La taille moyenne des groupes sera inférieur a " + (int)etudiants.size()%nbrGroupes + " ce qui est en dessous de la taille minimale (" + Groupe.nbrMinEtu + ").\n Voulez vous continuez quand meme ?Y/n");
 			String input = sc.next();
 			while(!input.equals("Y") && !input.equals("n")){
@@ -31,7 +103,7 @@ public class Formation{
 				input = sc.next();
 			}
 			if(input.equals("n"))
-				return 1;
+				return false;
 		}
 		return true;
 	}
@@ -189,3 +261,4 @@ public class Formation{
 		Etudiant e120 = new Etudiant(16, 17, 15, 0, false, false);
 	}
 }
+

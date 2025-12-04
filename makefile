@@ -1,2 +1,9 @@
-Formation.class: Formation.java Etudiant.java Groupe.java
-	javac Etudiant.java Groupe.java Formation.java
+
+all: Formation.class
+
+Formation.class: *.java
+	javac *.java
+
+clean: 
+	rm *.class
+

@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 public class Groupe{
 	private ArrayList<Etudiant> etudiants;
-	public int typeGroupe; //0 = tp, 1 = td
 	public float mathsMoyenne;
 	public float infoMoyenne;
 	public int nbrFilles;
@@ -13,16 +12,19 @@ public class Groupe{
 			mathsMoyenne = MathsMoyenne();
 			infoMoyenne = InfoMoyenne();
 			nbrFilles = NbrFilles();
+			etudiant.setGroupe(this);
 		}
 		else
-			System.out.printl("Erreur, taille du groupe maximale");
+			System.out.println("Erreur, taille du groupe maximale");
 	}
 
-	private Groupe(ArrayList<Etudiant> etudiants){
+	public Groupe(ArrayList<Etudiant> etudiants){
 		this.etudiants = etudiants;
 		this.mathsMoyenne = MathsMoyenne();
                 this.infoMoyenne = InfoMoyenne();
                 this.nbrFilles = NbrFilles();
+		for(Etudiant e : etudiants)
+			e.setGroupe(this);
 
 	}
 
