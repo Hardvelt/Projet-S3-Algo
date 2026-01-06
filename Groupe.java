@@ -19,7 +19,7 @@ public class Groupe{
 			this.score = Score();
 		}
 		else
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("Groupe " + this.nom + " complet");
 	}
 
 	public float score(){return score;}
@@ -27,8 +27,9 @@ public class Groupe{
 	public ArrayList<Etudiant> etudiants(){ return this.etudiants;}
 
 	public void addEtudiants(ArrayList<Etudiant> etudiants){
-		for(Etudiant e : etudiants)
+		for(Etudiant e : etudiants){
 			addEtudiant(e);
+		}
 	}
 
 	public Groupe(String nom, ArrayList<Etudiant> etudiants){
@@ -38,12 +39,25 @@ public class Groupe{
 		this.mathsMoyenne = MathsMoyenne();
 		this.infoMoyenne = InfoMoyenne();
 		this.nbrFilles = NbrFilles();
-		this.score = (4/9)*this.moyenne+(3/9)*this.mathsMoyenne+(2/9)*this.infoMoyenne;
-
+		this.score = Score(); 
 	}
 
-	private float Score(){
-		return (4/9)*this.moyenne+(3/9)*this.mathsMoyenne+(2/9)*this.infoMoyenne;
+	public Groupe(Groupe groupeCpy){
+		this.nom = groupeCpy.nom;
+		this.etudiants = new ArrayList<Etudiant>(groupeCpy.etudiants());
+		this.moyenne = Moyenne();
+		this.mathsMoyenne = MathsMoyenne();
+		this.infoMoyenne = InfoMoyenne();
+		this.nbrFilles = NbrFilles();
+		this.score = Score(); 
+	}
+	
+	public float Score(){
+		return (4*this.moyenne+3*this.mathsMoyenne+2*this.infoMoyenne)/9;
+	}
+
+	private float Score(Etudiant etu){
+		return (this.score + etu.Score())/2;  
 	}
 
 	private float Moyenne(){
@@ -80,7 +94,7 @@ public class Groupe{
 	}
 
 	public String toString(){
-		String affichage = "Le groupe " + this.nom + "sont score est de " + this.score + ", il contient " + this.etudiants.size() + " etudiants :\n";
+		String affichage = "Le groupe " + this.nom + " son score est de " + this.score + ", il contient " + this.etudiants.size() + " etudiants :\n";
 		for(Etudiant e : this.etudiants){
 			affichage += e.toString() + ", ";
 		}

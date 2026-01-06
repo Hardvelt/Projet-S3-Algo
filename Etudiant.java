@@ -1,10 +1,5 @@
 import java.util.ArrayList;
 public class Etudiant extends Utilisateur{
-	private int idUtilisateur;
-	public String nom;
-	public String prenom;
-	public String passwordHash;
-	public String emailPro;
 	public String emailPerso;
 	public boolean actif;
 	public float moyenne;
@@ -15,9 +10,8 @@ public class Etudiant extends Utilisateur{
 	public boolean estAlternant;
 	public boolean estSecAnglo;
 	public boolean estFille;
-	public ArrayList<Reponse> reponses;
-
-	public Etudiant(int idUtilisateur, String nom, String prenom, String passwordHash, String emailPro, String emailPerso, float moyenne, float infoMoyenne, float mathsMoyenne, int groupeCovoit, boolean estRedoublant, boolean estSecAnglo, ArrayList<Reponse> reponses){
+	
+	public Etudiant(int idUtilisateur, String nom, String prenom, String passwordHash, String emailPro, String emailPerso, float moyenne, float infoMoyenne, float mathsMoyenne, int groupeCovoit, boolean estRedoublant, boolean estSecAnglo){
 		super(idUtilisateur, nom, prenom, passwordHash, emailPro);
 		this.emailPerso = emailPerso;
 		this.moyenne = moyenne;
@@ -26,12 +20,17 @@ public class Etudiant extends Utilisateur{
 		this.groupeCovoit = groupeCovoit;
 		this.estRedoublant = estRedoublant;
 		this.estSecAnglo = estSecAnglo;
-		this.reponses = reponses;
+		this.estAlternant = false;
+		this.estFille = false;
 	}
 
-	public int idEtudiant(){ return this.idUtilisateur;}
+	public int idEtudiant(){ return super.idUtilisateur;}
 
 	public String toString(){
-		return this.nom +" " + this.prenom + " (" + this.idUtilisateur + ")";
+		return this.nom +" " + this.prenom + " (" + this.idEtudiant() + ") ";
 	}
+
+	public float Score(){
+		return (4*this.moyenne+3*this.mathsMoyenne+2*this.infoMoyenne)/9;
+	}	
 }
