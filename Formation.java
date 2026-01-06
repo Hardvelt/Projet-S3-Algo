@@ -123,7 +123,7 @@ public class Formation{
 					new Etudiant(++i, "", "", "", "", "", 14, 13, 15, 0, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 15, 14, 16, 0, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 11, 10, 12, 0, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 11, 10, 12, 13, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 12, 13, 11, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 13, 12, 14, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 10, 9, 11, 0, false, false), 
@@ -145,13 +145,13 @@ public class Formation{
 					new Etudiant(++i, "", "", "", "", "", 14, 13, 15, 0, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 11, 10, 12, 0, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 12, 12, 13, 0, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 12, 12, 13, 12, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 13, 14, 12, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 10, 9, 11, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 16, 17, 16, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 11, 12, 10, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 14, 14, 15, 0, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 13, 12, 14, 0, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 13, 12, 14, 10, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 17, 16, 18, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 12, 11, 13, 0, false, false), 
 
@@ -168,16 +168,16 @@ public class Formation{
 					new Etudiant(++i, "", "", "", "", "", 12, 13, 11, 9, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 15, 15, 16, 10, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 11, 10, 12, 10, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 11, 10, 12, 0, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 13, 12, 14, 11, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 9, 8, 10, 11, true, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 14, 13, 15, 12, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 12, 12, 13, 12, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 12, 12, 13, 0, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 10, 10, 9, 13, false, false), 
-					new Etudiant(++i, "", "", "", "", "", 15, 16, 14, 13, false, false), 
+					new Etudiant(++i, "", "", "", "", "", 15, 16, 14, 0, false, false), 
 					new Etudiant(++i, "", "", "", "", "", 9, 14, 12, 0, false, false), 
 
 					new Etudiant(++i, "", "", "", "", "", 13, 14, 12, 0, false, false), 

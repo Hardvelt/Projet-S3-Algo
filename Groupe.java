@@ -21,16 +21,20 @@ public class Groupe{
 		else
 			throw new IndexOutOfBoundsException("Groupe " + this.nom + " complet");
 	}
-
-	public float score(){return score;}
-
-	public ArrayList<Etudiant> etudiants(){ return this.etudiants;}
-
+	
 	public void addEtudiants(ArrayList<Etudiant> etudiants){
+		addEtudiants(etudiants.toArray(new Etudiant[0]));
+	}
+
+	public void addEtudiants(Etudiant... etudiants){
 		for(Etudiant e : etudiants){
 			addEtudiant(e);
 		}
 	}
+	
+	public float score(){return score;}
+
+	public ArrayList<Etudiant> etudiants(){ return this.etudiants;}
 
 	public Groupe(String nom, ArrayList<Etudiant> etudiants){
 		this.nom = nom;
@@ -53,7 +57,10 @@ public class Groupe{
 	}
 	
 	public float Score(){
-		return (4*this.moyenne+3*this.mathsMoyenne+2*this.infoMoyenne)/9;
+		float score = (4*this.moyenne+3*this.mathsMoyenne+2*this.infoMoyenne)/9;
+		if(score != score)
+			score = 0;		
+		return score;
 	}
 
 	private float Score(Etudiant etu){
