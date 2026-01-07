@@ -4,7 +4,7 @@ README – Création de groupes d’étudiants en Java
 1.1 Création gloutonne avec contraintes complètes
 
 Méthode :
-    Glouton1(int nbrGroupes, Semestre semestre, ArrayList<Etudiant> etudiantsCpy)
+    Glouton1(int nbrGroupes, Semestre semestre, ArrayList<Etudiant> etudiantsCpy) par Damien Braconnier :
 
 Principe :
     Cet algorithme utilise une approche gloutonne, minimisant la somme des différences de score entre chaque groupe et les étudiants.
@@ -49,7 +49,7 @@ Limites :
     
     contrainte élevée pour les groupes anglo et peut ne pas trouver de solution car les filles sont aussi mises dedans
     
-1.2 Création gloutonne avec contraintes allégées
+1.2 Création gloutonne avec contraintes allégées par Damien Braconnier :
 
 Méthode :
     Glouton2(int nbrGroupes, int nbrGroupesFilles, Semestre semestre, ArrayList<Etudiant> etudiantsCpy)
@@ -67,7 +67,7 @@ Objectif :
 
     Améliorer la faisabilité dans des cas où les contraintes strictes rendent la création impossible ou une baisse de score.
 
-1.3 Création par force brute (brute force)
+1.3 Création par force brute (brute force) par Damien Braconnier 
 
 Méthode :
     bruteForce(ArrayList<Etudiant> etudiants, int nbrGroupes, Semestre semestre)
@@ -100,13 +100,13 @@ Limites majeures :
 Inutilisable
 
 2. Algorithmes importants expliqués
-2.1 Respect du covoiturage
+2.1 Respect du covoiturage par Damien Braconnier :
 
     La méthode RespectCovoiturage vérifie que deux étudiants appartenant au même groupe de covoiturage ne se retrouvent jamais dans des groupes différents.
 
     Elle parcourt chaque étudiant et compare son identifiant de covoiturage avec ceux des autres groupes.
 
-2.2 Génération des partitions (force brute)
+2.2 Génération des partitions (force brute) par Damien Braconnier :
 
     La méthode generatePartitions utilise une approche récursive :
 
