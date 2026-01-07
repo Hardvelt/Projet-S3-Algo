@@ -99,31 +99,8 @@ Limites majeures :
 
 Inutilisable
 
-2. Algorithmes importants expliqués
-2.1 Respect du covoiturage par Damien Braconnier :
-
-    La méthode RespectCovoiturage vérifie que deux étudiants appartenant au même groupe de covoiturage ne se retrouvent jamais dans des groupes différents.
-
-    Elle parcourt chaque étudiant et compare son identifiant de covoiturage avec ceux des autres groupes.
-
-2.2 Génération des partitions (force brute) par Damien Braconnier :
-
-    La méthode generatePartitions utilise une approche récursive :
-
-    on place récursivement chaque étudiant dans chacun des groupes possibles
-
-    cela génère toutes les combinaisons possibles
-
-    Cette méthode est très coûteuse mais correcte sur le plan algorithmique.
-
-2. Améliorations possibles
-
-    Optimisation du brute force en le tranformant en un algorithme de branch and bound
-
-    Ajout de poids configurables pour les critères du score
-
-    Parallélisation du calcul des partitions
 
 3. Conclusion
 
     Ce projet compare une approche gloutonne efficace à une approche optimale mais coûteuse, permettant de mieux comprendre les compromis entre performance et optimalité dans les algorithmes de création de groupes.
+
