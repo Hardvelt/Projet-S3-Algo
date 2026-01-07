@@ -46,11 +46,29 @@ public class Semestre {
 			return false;
 	}
 	
-	public Groupe scoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, boolean plusUnAutoriser, ArrayList<Etudiant> etus) throws IllegalArgumentException{
-		return scoreMinimal(etudiantsCpy, tailleGroupe, plusUnAutoriser, etus.toArray(new Etudiant[0]));
+	public Groupe GroupeScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, int nbrGroupes, boolean plusUnAutoriser, ArrayList<Etudiant> etus) throws IllegalArgumentException{
+		return GroupeScoreMinimal(etudiantsCpy, tailleGroupe, plusUnAutoriser, etus.toArray(new Etudiant[0]));
 	}
 
-	public Groupe scoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, boolean plusUnAutoriser, Etudiant... etus) throws IllegalArgumentException{
+	public Groupe GroupeScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, int nbrGroupes, boolean plusUnAutoriser, Etudiant... etus) throws IllegalArgumentException{
+
+		int indiceGroupeOptimal = -1;
+
+		indiceGroupeOptimal = indiceGroupeOptimal(etudiantsCpy, tailleGroupe, nbrGroupes, etus); 
+		
+		if(indiceGroupeOptimal == -1 && plusUnAutoriser)
+			indiceGroupeOptimal = indiceGroupeOptimal(etudiantsCpy, tailleGroupe+1, nbrGroupes, etus);
+		if(indiceGroupeOptimal == -1)
+			throw new IllegalArgumentException("Impossibilité de respecter les contraintes");
+
+		return this.groupes.get(indiceGroupeOptimal);
+	}
+
+	public Groupe GroupeScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, boolean plusUnAutoriser, ArrayList<Etudiant> etus) throws IllegalArgumentException{
+		return GroupeScoreMinimal(etudiantsCpy, tailleGroupe, plusUnAutoriser, etus.toArray(new Etudiant[0]));
+	}
+
+	public Groupe GroupeScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, boolean plusUnAutoriser, Etudiant... etus) throws IllegalArgumentException{
 
 		boolean contientAnglo = false;
 		for(Etudiant e : etus){
@@ -70,6 +88,29 @@ public class Semestre {
 			throw new IllegalArgumentException("Impossibilité de respecter les contraintes");
 
 		return this.groupes.get(indiceGroupeOptimal);
+	}
+
+	public int ScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, int nbrGroupes, ArrayList<Etudiant> etus){
+		return ScoreMinimal(etudiantsCpy, tailleGroupe, nbrGroupes, etus.toArray(new Etudiant[0]));
+	}
+
+	public int ScoreMinimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, int nbrGroupes, Etudiant... etus){
+
+		int indiceGroupeOptimal = -1;
+		int scoreMinimal = Integer.MAX_VALUE;
+		for(int i = 0; i < nbrGroupes; i++){
+			Semestre test = new Semestre(this);
+
+			if(test.groupes.get(i).etudiants().size() + etus.length > tailleGroupe)
+				continue;
+			test.groupes.get(i).addEtudiants(etus);
+			int testScore = test.Score(etudiantsCpy);
+			if(testScore < scoreMinimal){
+				scoreMinimal = testScore;
+				indiceGroupeOptimal = i;
+			}
+		}
+		return scoreMinimal;
 	}
 
 	private int indiceGroupeOptimal(ArrayList<Etudiant> etudiantsCpy, int tailleGroupe, int nbrGroupes, Etudiant... etus){
@@ -101,7 +142,7 @@ public class Semestre {
 		for(int i = 0; i < this.groupes.size(); i++)
 			scoreSem += Math.abs(this.groupes.get(i).Score() - scoreEtus);	
 		scoreSem /= this.groupes.size();
-		
+
 		return scoreSem;
 	}
 
