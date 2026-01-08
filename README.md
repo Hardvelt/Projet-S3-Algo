@@ -111,117 +111,87 @@ Inutilisable
 
 
 
-Algorithmes de constitution de groupes (S3)
+README — Algorithmes S3 (constitution automatique de groupes)
 
-Ce dossier contient trois algorithmes de constitution automatique de groupes TD/TP.
-Ils prennent en entrée une liste d’étudiants (List<EtudiantDTO>) et renvoient une solution sous forme de liste de groupes (List<List<EtudiantDTO>>).
-Les contraintes de tailles sont celles définie dans scoreS3 : TAILLE_MIN = 14 et TAILLE_MAX = 18.
+Ce dossier contient 3 algorithmes de génération de groupes pour le semestre S3 : deux heuristiques gloutonnes (rapides) et un brute force (très coûteux, limité à un petit nombre d’étudiants).
+Chaque algorithme implémente l’interface modeleAlgo.AlgorithmeGroupes et renvoie une structure List<List<EtudiantDTO>> (liste de groupes).
 
-1) GloutonS3_1 — Répartition simple avec objectifs filles/garçons
+Les tailles de groupes respectent la contrainte générale du projet : entre 14 et 18 étudiants (scoreS3.TAILLE_MIN et scoreS3.TAILLE_MAX).
+Les contraintes “filles/garçons minimum” sont des objectifs : si ce n’est pas possible avec les étudiants restants, l’algorithme complète quand même les groupes.
 
-Nom : Glouton S3_1
-Idée générale : construire les groupes un par un, en essayant d’atteindre une taille équilibrée, avec des priorités simples (filles/garçons), tout en limitant les redoublants.
+1) GloutonS3_1 — Glouton simple (remplissage équilibré)
 
-Règles / priorités : 
+But : créer rapidement nombreGroupes groupes en essayant de les équilibrer en taille.
 
-Chaque groupe a une taille cible calculée dynamiquement :
-tailleCible = taille(nbRestants / groupesRestants), puis bornée entre 14 et 18.
+Principe :
 
-Pendant le remplissage d’un groupe :
+- On copie les étudiants dans une liste restants.
+- On construit les groupes un par un.
 
-- Si on n’a pas encore 5 filles, on ajoute en priorité une fille.
-- Sinon, si on n’a pas encore 5 garçons, on ajoute en priorité un garçon.
-- Sinon, on ajoute normalement un étudiant.
+Pour chaque groupe, on calcule une taille cible (entre 14 et 18) pour éviter que les derniers groupes soient trop petits.
 
-Contrainte stricte : maximum 3 redoublants par groupe.
+On ajoute les étudiants en priorité pour tendre vers :
 
-Sécurité : si on n’arrive pas à remplir assez (moins de 14), l’algorithme force l’ajout d’étudiants restants pour atteindre au moins 14 (sans dépasser 18).
+- MIN_FILLES = 5
+- MIN_GARCONS = 5
 
-Résultat attendu :
+On limite les redoublants à MAX_REDOUBLANTS_PAR_GROUPE = 3 (si possible).
 
-- Des groupes de taille entre 14 et 18 (en fonction du nombre d’étudiants restants).
-- Les 5 filles / 5 garçons sont des objectifs (priorité) : si c’est impossible, l’algorithme continue quand même.
+Si on n’arrive pas à atteindre 14 avec les contraintes, on autorise un ajout “secours” pour compléter le groupe.
 
-2) GloutonS3_2 — Glouton avec homogénéité apprentissage + covoiturage
+Complexité : rapide (adapté à une vraie promotion).
 
-Nom : Glouton S3_2
-Idée générale : même principe que le glouton 1, mais ajoute deux règles importantes :
+2) GloutonS3_2 — Glouton avec filtre apprentis + covoiturage
 
-homogénéité apprentis / initiaux ET gestion du covoiturage (pack)
+But : même objectif que le glouton 1, mais avec des contraintes supplémentaires.
 
-Règle 1 : apprentissage (homogénéité)
+Règles ajoutées :
 
-On regarde le premier étudiant de la liste :
+Homogénéité apprentissage :
+- On choisit un “mode” selon le premier étudiant :
 
-- s’il est apprenti ⇒ on ne garde que les apprentis
-- sinon ⇒ on ne garde que les initiaux
+soit on garde uniquement les apprentis
 
-Donc la solution calculée ne mélange pas les statuts (apprentis/initiaux) dans la répartition produite.
+soit on garde uniquement les initiaux
+(donc le résultat est homogène sur ce statut)
 
-Règle 2 : covoiturage (pack)
+Covoiturage :
+- Si un étudiant a un indiceCovoiturage > 0, on cherche tous ceux qui ont le même indice et on tente d’ajouter le pack (au moins 2 personnes) en une fois, si ça  -- rentre dans le groupe (sans dépasser TAILLE_MAX et en respectant la limite redoublants).
 
-Si un étudiant a indiceCovoiturage > 0 :
+Ensuite, comme GloutonS3_1, on essaie d’atteindre :
 
-- on cherche tous les étudiants ayant le même indice
-- si au moins 2 étudiants partagent cet indice, on tente d’ajouter tout le pack dans le groupe
+MIN_FILLES = 5
 
-l’ajout du pack est accepté seulement si :
+MIN_GARCONS = 5
+et on limite les redoublants.
 
-- on ne dépasse pas 18
-- on respecte la limite redoublants ≤ 3 et que cela rentre dans la tailleCible (ou qu’on n’a pas encore 14)
+Complexité : rapide, un peu plus lourd que S3_1 mais utilisable en production.
 
-Règles communes avec GloutonS3_1
+3) BruteForceS3 — Recherche exhaustive (très coûteuse)
 
-Même logique de tailleCible (entre 14 et 18).
+But : tester un maximum de répartitions possibles pour trouver la solution avec le meilleur score (via scoreS3.scoreSolution).
 
-Même objectifs :
+Principe :
 
-priorité filles si < 5
-puis priorité garçons si < 5
+On explore récursivement toutes les affectations possibles :
 
-Même contrainte stricte :
+soit un étudiant n’est pas placé (-1)
 
-- max 3 redoublants par groupe
-- Même comportement “secours” :
+soit il est placé dans un des groupes 0..nbGroupes-1
 
-si on est encore < 14, on force des ajouts pour atteindre 14.
+On respecte TAILLE_MAX pendant la construction (pas plus de 18).
 
-Résultat attendu :
+À la fin (quand tous les étudiants sont décidés), on :
 
-- Des groupes entre 14 et 18.
-- Des étudiants covoiturant regroupés autant que possible.
+- construit la solution (liste de groupes)
+- calcule le score
+- garde la meilleure affectation trouvée
 
-Une répartition homogène (apprentis ou initiaux selon le premier étudiant).
+Limite importante :
 
-3) BruteForceS3 — Recherche exhaustive (limitée)
+LIMITE_ETUDIANTS = 18 obligatoire, sinon le nombre de possibilités explose (freeze assuré).
 
-Nom : Brute force S3
-Idée générale : explorer récursivement toutes les affectations possibles des étudiants dans les groupes (ou pas placés), et garder la meilleure selon la fonction scoreS3.scoreSolution(...).
-
-Limite : LIMITE_ETUDIANTS = 18 : au-delà, le nombre de possibilités explose (temps trop long).
-
-Le nombre de groupes réellement utilisés est ajusté :
-
-nbGroupesReels = min(nombreGroupesDemandés, nbEtudiants / TAILLE_MIN) pour éviter de demander plus de groupes que possible.
-
-Principe du backtracking
-
-Pour chaque étudiant (dans l’ordre de la liste) :
-
-choix A : ne pas l’affecter (-1)
-
-choix B : l’affecter au groupe 0, 1, 2, … si le groupe n’a pas dépassé 18
-
-Quand tous les étudiants ont été traités :
-
-- on construit les groupes à partir de l’affectation
-- on calcule scoreS3.scoreSolution(solution)
-
-on garde la meilleure solution rencontrée.
-
-Résultat attendu : Sur ≤ 18 étudiants, il peut trouver une solution meilleure qu’un glouton.
-
-Le résultat dépend entièrement de la fonction de score scoreS3.
+Complexité : exponentielle, utilisable uniquement sur de petits tests.
 
 
 
