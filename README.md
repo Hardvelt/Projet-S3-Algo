@@ -104,3 +104,124 @@ Inutilisable
 
     Ce projet compare une approche gloutonne efficace à une approche optimale mais coûteuse, permettant de mieux comprendre les compromis entre performance et optimalité dans les algorithmes de création de groupes.
 
+
+
+
+
+
+
+
+Algorithmes de constitution de groupes (S3)
+
+Ce dossier contient trois algorithmes de constitution automatique de groupes TD/TP.
+Ils prennent en entrée une liste d’étudiants (List<EtudiantDTO>) et renvoient une solution sous forme de liste de groupes (List<List<EtudiantDTO>>).
+Les contraintes de tailles sont celles définie dans scoreS3 : TAILLE_MIN = 14 et TAILLE_MAX = 18.
+
+1) GloutonS3_1 — Répartition simple avec objectifs filles/garçons
+
+Nom : Glouton S3_1
+Idée générale : construire les groupes un par un, en essayant d’atteindre une taille équilibrée, avec des priorités simples (filles/garçons), tout en limitant les redoublants.
+
+Règles / priorités : 
+
+Chaque groupe a une taille cible calculée dynamiquement :
+tailleCible = taille(nbRestants / groupesRestants), puis bornée entre 14 et 18.
+
+Pendant le remplissage d’un groupe :
+
+- Si on n’a pas encore 5 filles, on ajoute en priorité une fille.
+- Sinon, si on n’a pas encore 5 garçons, on ajoute en priorité un garçon.
+- Sinon, on ajoute normalement un étudiant.
+
+Contrainte stricte : maximum 3 redoublants par groupe.
+
+Sécurité : si on n’arrive pas à remplir assez (moins de 14), l’algorithme force l’ajout d’étudiants restants pour atteindre au moins 14 (sans dépasser 18).
+
+Résultat attendu :
+
+- Des groupes de taille entre 14 et 18 (en fonction du nombre d’étudiants restants).
+- Les 5 filles / 5 garçons sont des objectifs (priorité) : si c’est impossible, l’algorithme continue quand même.
+
+2) GloutonS3_2 — Glouton avec homogénéité apprentissage + covoiturage
+
+Nom : Glouton S3_2
+Idée générale : même principe que le glouton 1, mais ajoute deux règles importantes :
+
+homogénéité apprentis / initiaux ET gestion du covoiturage (pack)
+
+Règle 1 : apprentissage (homogénéité)
+
+On regarde le premier étudiant de la liste :
+
+- s’il est apprenti ⇒ on ne garde que les apprentis
+- sinon ⇒ on ne garde que les initiaux
+
+Donc la solution calculée ne mélange pas les statuts (apprentis/initiaux) dans la répartition produite.
+
+Règle 2 : covoiturage (pack)
+
+Si un étudiant a indiceCovoiturage > 0 :
+
+- on cherche tous les étudiants ayant le même indice
+- si au moins 2 étudiants partagent cet indice, on tente d’ajouter tout le pack dans le groupe
+
+l’ajout du pack est accepté seulement si :
+
+- on ne dépasse pas 18
+- on respecte la limite redoublants ≤ 3 et que cela rentre dans la tailleCible (ou qu’on n’a pas encore 14)
+
+Règles communes avec GloutonS3_1
+
+Même logique de tailleCible (entre 14 et 18).
+
+Même objectifs :
+
+priorité filles si < 5
+puis priorité garçons si < 5
+
+Même contrainte stricte :
+
+- max 3 redoublants par groupe
+- Même comportement “secours” :
+
+si on est encore < 14, on force des ajouts pour atteindre 14.
+
+Résultat attendu :
+
+- Des groupes entre 14 et 18.
+- Des étudiants covoiturant regroupés autant que possible.
+
+Une répartition homogène (apprentis ou initiaux selon le premier étudiant).
+
+3) BruteForceS3 — Recherche exhaustive (limitée)
+
+Nom : Brute force S3
+Idée générale : explorer récursivement toutes les affectations possibles des étudiants dans les groupes (ou pas placés), et garder la meilleure selon la fonction scoreS3.scoreSolution(...).
+
+Limite : LIMITE_ETUDIANTS = 18 : au-delà, le nombre de possibilités explose (temps trop long).
+
+Le nombre de groupes réellement utilisés est ajusté :
+
+nbGroupesReels = min(nombreGroupesDemandés, nbEtudiants / TAILLE_MIN) pour éviter de demander plus de groupes que possible.
+
+Principe du backtracking
+
+Pour chaque étudiant (dans l’ordre de la liste) :
+
+choix A : ne pas l’affecter (-1)
+
+choix B : l’affecter au groupe 0, 1, 2, … si le groupe n’a pas dépassé 18
+
+Quand tous les étudiants ont été traités :
+
+- on construit les groupes à partir de l’affectation
+- on calcule scoreS3.scoreSolution(solution)
+
+on garde la meilleure solution rencontrée.
+
+Résultat attendu : Sur ≤ 18 étudiants, il peut trouver une solution meilleure qu’un glouton.
+
+Le résultat dépend entièrement de la fonction de score scoreS3.
+
+
+
