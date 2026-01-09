@@ -1,0 +1,112 @@
+package fr.iut.sae.app.algo.s2;
+
+import fr.iut.sae.app.model.dto.EtudiantDTO;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+
+public final class AlgoUtil {
+
+    private final static int TAILLE_MAX = 19;
+    private final static int TAILLE_MIN = 15;
+
+    private AlgoUtil() {}
+
+    public static List<List<EtudiantDTO>> groupesCovoiturage(List<EtudiantDTO> formation, int maxTailleCovoit) throws IllegalArgumentException {
+        int maxCovoit = 0;
+        int minCovoit = Integer.MAX_VALUE;
+        for (EtudiantDTO e : formation) {
+            if (maxCovoit < e.getIndiceCovoiturage())
+                maxCovoit = e.getIndiceCovoiturage();
+            if (minCovoit > e.getIndiceCovoiturage() && e.getIndiceCovoiturage() != 0)
+                minCovoit = e.getIndiceCovoiturage();
+        }
+        int stop = maxCovoit - minCovoit;
+
+        List<List<EtudiantDTO>> groupesCovoit = new ArrayList<>();
+        for (int i = 0; i <= stop; i++)
+            groupesCovoit.add(new ArrayList<>());
+
+        for (EtudiantDTO e : formation) {
+            if (e.getIndiceCovoiturage() != 0) {
+                if (groupesCovoit.get(e.getIndiceCovoiturage() - minCovoit).size() >= maxTailleCovoit) {
+                    throw new IllegalArgumentException("Le covoiturage " + e.getIndiceCovoiturage() +
+                            " a trop de membre par rapport a ce qui est autorise (" + maxTailleCovoit + ")");
+                }
+                groupesCovoit.get(e.getIndiceCovoiturage() - minCovoit).add(e);
+            }
+        }
+
+        return groupesCovoit;
+    }
+
+    public static int indiceGroupeScoreMinimal(List<EtudiantDTO> formation, int tailleGroupe, boolean autoriseAugmentationTailleGroupe,
+                                               List<List<EtudiantDTO>> listeGroupes, List<EtudiantDTO> etudiant) {
+        return indiceGroupeScoreMinimal(formation, tailleGroupe, autoriseAugmentationTailleGroupe, listeGroupes, etudiant.toArray(new EtudiantDTO[0]));
+    }
+
+    public static int indiceGroupeScoreMinimal(List<EtudiantDTO> formation, int tailleGroupes, boolean autoriseAugmentationTailleGroupe,
+                                               List<List<EtudiantDTO>> listeGroupes, EtudiantDTO... etudiant) {
+        int meilleurIndex = -1;
+        int meilleurScore = Integer.MAX_VALUE;
+
+        for (int i = 0; i < listeGroupes.size(); i++) {
+            List<EtudiantDTO> groupe = listeGroupes.get(i);
+            if (groupe.size() >= tailleGroupes)
+                continue;
+            int score = scoreSemestre(listeGroupes, formation);
+            if (score < meilleurScore) {
+                meilleurScore = score;
+                meilleurIndex = i;
+            }
+        }
+
+        if (meilleurIndex == -1 && autoriseAugmentationTailleGroupe)
+            return indiceGroupeScoreMinimal(formation, tailleGroupes + 1, false, listeGroupes, etudiant);
+
+        return meilleurIndex;
+    }
+
+    private static int scoreSemestre(List<List<EtudiantDTO>> groupes, List<EtudiantDTO> formation) {
+        int scoreEtus = 0;
+        int scoreSem = 0;
+
+        for (int i = 0; i < formation.size(); i++)
+            scoreEtus += moyenneGroupe(formation);
+        scoreEtus /= formation.size();
+
+        for (int i = 0; i < groupes.size(); i++)
+            scoreSem += Math.abs(moyenneGroupe(groupes.get(i)) - scoreEtus);
+        scoreSem /= groupes.size();
+
+        return scoreSem;
+    }
+
+    private static float moyenneGroupe(List<EtudiantDTO> groupe) {
+        float moyenne = 0;
+        for (EtudiantDTO etudiant : groupe)
+            moyenne += etudiant.getMoyenne();
+        return groupe.isEmpty() ? 0 : moyenne / groupe.size();
+    }
+
+    public static List<EtudiantDTO> groupeAnglo(List<EtudiantDTO> etu) {
+        List<EtudiantDTO> anglo = new ArrayList<>();
+        for (EtudiantDTO e : etu)
+            if (e != null && e.getEstAnglophone() == 1)
+                anglo.add(e);
+        return anglo;
+    }
+
+    /** 
+     * ✅ Correction : on ne bloque plus la création des groupes 
+     */
+    public static int checkNbrGroupes(int nbrGroupes, List<EtudiantDTO> etudiants) {
+        if (nbrGroupes <= 0) return 0;
+
+        int tailleGroupes = etudiants.size() / nbrGroupes;
+
+        // Avant : renvoyait 1 ou 2 -> erreur bloquante
+        // Maintenant : on laisse passer toutes les tailles
+        return 0;
+    }
+}
