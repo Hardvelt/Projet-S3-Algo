@@ -194,4 +194,73 @@ LIMITE_ETUDIANTS = 18 obligatoire, sinon le nombre de possibilités explose (fre
 Complexité : exponentielle, utilisable uniquement sur de petits tests.
 
 
+README – Algorithmes S1 bouremani Mohamed 
+Ce module contient 3 algorithmes de génération de groupes pour le semestre S1. Ils implémentent l'interface AlgorithmeGroupes et sont évalués par la classe ScoreS1 (règles : taille entre 14-17, min 3 filles, idéalement 8 bacheliers technologiques).
+
+1. Glouton S1 (Distribution Équilibrée)
+Classe : GloutonS1.java
+
+Principe : Cet algorithme privilégie l'équilibre parfait des tailles de groupes et assure la contrainte de mixité minimale de manière simple.
+
+Étapes principales :
+
+Séparation : On divise la liste principale en deux listes : les Filles et les Autres.
+
+Distribution des Filles : On distribue les filles une par une dans chaque groupe (méthode circulaire) pour maximiser les chances d'atteindre le quota de 3 par groupe.
+
+Remplissage (Équilibrage) : Pour tous les étudiants restants, l'algorithme cherche systématiquement le groupe le plus petit actuellement pour y ajouter l'étudiant.
+
+Avantages :
+
+Très rapide.
+
+Garantit des groupes de tailles quasi-identiques.
+
+Assure une répartition homogène des filles.
+
+Limites :
+
+Ne prend pas du tout en compte l'origine scolaire (Bac Techno vs Général). Le score sera faible sur le critère "Diversité".
+
+2. Glouton Quotas (Priorité au Bac Techno)
+Classe : GloutonQuotas.java
+
+Principe : Cette version est plus complexe et tente de "forcer" les contraintes spécifiques du barème S1 (notamment le nombre de bacheliers technologiques).
+
+Étapes principales :
+
+Catégorisation : Les étudiants sont classés en 4 listes : Filles Techno, Filles Général, Garçons Techno, Garçons Général.
+
+Sécuriser la mixité : On insère d'abord 3 filles dans chaque groupe, en puisant en priorité dans les "Filles Techno" pour commencer à remplir le quota "Bac".
+
+Cible Techno : On ajoute des "Garçons Techno" dans les groupes jusqu'à atteindre le chiffre idéal de 8 technos par groupe.
+
+Remplissage final : Tous les étudiants restants sont distribués circulairement dans les groupes ayant encore de la place (< 17).
+
+
+3. Brute Force S1 (Recherche Exhaustive)
+Classe : BruteForceS1.java
+
+Principe : Cet algorithme teste toutes les combinaisons possibles d'affectation pour trouver la solution mathématiquement parfaite selon le ScoreS1.
+
+Méthode :
+
+Utilise le Backtracking (récursivité).
+
+Place un étudiant, teste la suite, revient en arrière si nécessaire.
+
+Mémorise la solution ayant le meilleur score rencontré.
+
+Avantages :
+
+Trouve la solution optimale absolue (Score maximal possible).
+
+Limites majeures :
+
+Complexité exponentielle.
+
+Inutilisable sur une classe entière.
+
+Sécurité activée : L'algorithme renvoie null si la liste contient plus de 20 étudiants, pour éviter de faire planter l'application (freeze infini)
+
 
