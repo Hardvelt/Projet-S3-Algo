@@ -1,5 +1,6 @@
 README – Création de groupes d’étudiants en Java
-
+Veuillez attendre 13h pour avoir l'explication pour lancer l'application. 
+Le compte admin est "responsable" et à pour mot de passe "test 123".
 1. Modes de création de groupes
 1.1 Création gloutonne avec contraintes complètes
 
@@ -262,5 +263,6 @@ Complexité exponentielle.
 Inutilisable sur une classe entière.
 
 Sécurité activée : L'algorithme renvoie null si la liste contient plus de 20 étudiants, pour éviter de faire planter l'application (freeze infini)
+
 
 
